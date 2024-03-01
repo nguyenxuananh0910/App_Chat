@@ -53,7 +53,26 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
+    flavorDimensions "default"
+    productFlavors {
+        production {
+            dimension "default"
+            applicationIdSuffix ""
+            manifestPlaceholders = [appName: "AppChat"]
+        }
+        staging {
+            dimension "default"
+            applicationIdSuffix ""
+            manifestPlaceholders = [appName: "[STG] AppChat"]
 
+        }
+        development {
+            dimension "default"
+            applicationIdSuffix ".dev"
+            manifestPlaceholders = [appName: "[DEV] AppChat"]
+
+        }
+    }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

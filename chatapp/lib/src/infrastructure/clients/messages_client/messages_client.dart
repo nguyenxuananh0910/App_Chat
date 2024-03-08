@@ -9,10 +9,10 @@ part 'messages_client.g.dart';
 abstract class MessagesClient {
   factory MessagesClient(Dio dio, {String baseUrl}) = _MessagesClient;
 
-  @GET('/message/{groupId }')
-  Future getMessages(@Path('groupId ') int groupId);
+  @GET('/Messages/{groupId}')
+  Future getMessages(@Path('groupId') int groupId);
 
-  @POST('/messages')
+  @POST('/Message')
   Future sendMessage(@Body() PostSendMessageBody body);
 
   @GET('/Groups/{userId}')
@@ -21,7 +21,7 @@ abstract class MessagesClient {
   @POST('/CreateGroup')
   Future createGroup(@Body() PostCreateGroupBody body);
 
-  @GET('/checkIfUserMessaged/{userAId}/{userBId}')
+  @GET('/CheckIfUsersMessaged/{userAId}/{userBId}')
   Future checkIfUserMessaged(
-      @Query('userAId') int userAId, @Query('userBId') int userBId);
+      @Path('userAId') int userAId, @Path('userBId') int userBId);
 }

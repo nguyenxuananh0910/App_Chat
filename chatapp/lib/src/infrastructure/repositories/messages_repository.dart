@@ -63,9 +63,9 @@ class MessagesRepository implements MessageService {
   }
 
   @override
-  Future<GroupModel> createGroup({required PostCreateGroupBody group}) async {
+  Future<GroupModel> createGroup({required PostCreateGroupBody body}) async {
     try {
-      final res = await _messageClient.createGroup(group);
+      final res = await _messageClient.createGroup(body);
       if (res != null) {
         final data = GroupModel.fromJson(res['data'] as Map<String, dynamic>);
         return data;

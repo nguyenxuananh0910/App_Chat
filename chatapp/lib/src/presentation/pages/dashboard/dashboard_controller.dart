@@ -1,5 +1,5 @@
+import 'package:chatapp/src/presentation/pages/chat/home_page.dart';
 import 'package:chatapp/src/presentation/pages/contact/contact_page.dart';
-import 'package:chatapp/src/presentation/pages/home/home_page.dart';
 import 'package:chatapp/src/presentation/pages/profile/profile_page.dart';
 import 'package:get/get.dart';
 

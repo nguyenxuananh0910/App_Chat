@@ -1,9 +1,12 @@
+import 'package:chatapp/src/presentation/pages/chat/create_group/create_group_page.dart';
+import 'package:chatapp/src/presentation/pages/chat/home_controller.dart';
+import 'package:chatapp/src/presentation/pages/chat/home_page.dart';
+import 'package:chatapp/src/presentation/pages/chat/room_chat/room_chat_controller.dart';
+import 'package:chatapp/src/presentation/pages/chat/room_chat/room_chat_page.dart';
 import 'package:chatapp/src/presentation/pages/contact/contact_controller.dart';
 import 'package:chatapp/src/presentation/pages/contact/contact_page.dart';
 import 'package:chatapp/src/presentation/pages/dashboard/dashboard_controller.dart';
 import 'package:chatapp/src/presentation/pages/dashboard/dashboard_page.dart';
-import 'package:chatapp/src/presentation/pages/home/home_controller.dart';
-import 'package:chatapp/src/presentation/pages/home/home_page.dart';
 import 'package:chatapp/src/presentation/pages/login/login_controller.dart';
 import 'package:chatapp/src/presentation/pages/login/login_page.dart';
 import 'package:chatapp/src/presentation/pages/profile/profile_controller.dart';
@@ -21,6 +24,8 @@ class AppRouter {
   static const homePage = '/home-page';
   static const contactPage = '/contact-page';
   static const profilePage = '/profile-page';
+  static const roomChatPage = '/room-chat-page';
+  static const createGroupPage = '/create-group-page';
 
   static final getPages = [
     GetPage(
@@ -77,6 +82,19 @@ class AppRouter {
           Get.lazyPut(ProfileController.new);
         },
       ),
+    ),
+    GetPage(
+      name: roomChatPage,
+      page: () => const RoomChatPage(),
+      binding: BindingsBuilder<void>(
+        () {
+          Get.lazyPut(RoomChatController.new);
+        },
+      ),
+    ),
+    GetPage(
+      name: createGroupPage,
+      page: () => const CreateGroupPage(),
     ),
   ];
 }

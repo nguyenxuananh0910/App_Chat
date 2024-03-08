@@ -55,9 +55,9 @@ class UserRepository implements UserService {
   }
 
   @override
-  Future<List<UserModel>> getUsers() async {
+  Future<List<UserModel>> getUsers({required int userId}) async {
     try {
-      final res = await _userClient.getUsers();
+      final res = await _userClient.getUsers(userId);
       if (res != null) {
         final data = (res['data'] as List)
             .map((e) => UserModel.fromJson(e as Map<String, dynamic>))

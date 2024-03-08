@@ -21,7 +21,5 @@ class AuthValueConst {
   static const String messageServiceTAG = 'MessageModule|MessageService';
 
   static const String dioTAG = 'app|Dio';
-  static const String baseImageUrl = 'http://34.142.198.2';
-  static const String baseImageUserUrl =
-      'https://res.cloudinary.com/df3vn23o6/image/upload';
+  static const String baseApiUrl = 'http://192.168.1.96:8024';
 }

@@ -8,5 +8,5 @@ abstract interface class UserService {
       {required String username, required String password});
 
   Future<UserModel> getUser({required int userId});
-  Future<List<UserModel>> getUsers();
+  Future<List<UserModel>> getUsers({required int userId});
 }

@@ -31,7 +31,7 @@ class _MessagesClient implements MessagesClient {
     )
         .compose(
           _dio.options,
-          '/message/${groupId}',
+          '/Messages/${groupId}',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -58,7 +58,7 @@ class _MessagesClient implements MessagesClient {
     )
         .compose(
           _dio.options,
-          '/messages',
+          '/Message',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -130,10 +130,7 @@ class _MessagesClient implements MessagesClient {
     int userBId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'userAId': userAId,
-      r'userBId': userBId,
-    };
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
@@ -143,7 +140,7 @@ class _MessagesClient implements MessagesClient {
     )
         .compose(
           _dio.options,
-          '/checkIfUserMessaged/{userAId}/{userBId}',
+          '/CheckIfUsersMessaged/${userAId}/${userBId}',
           queryParameters: queryParameters,
           data: _data,
         )

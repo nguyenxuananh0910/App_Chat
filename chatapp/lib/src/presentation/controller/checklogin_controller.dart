@@ -13,13 +13,30 @@ class CheckLoginController extends GetxController {
   final Rxn<UserModel> user = Rxn<UserModel>();
   @override
   void onInit() {
-    checkLogin();
+    dataUser();
     super.onInit();
   }
 
-  Future<void> checkLogin() async {
+  Future getUser({required int receiverId}) async {
+    try {
+      final res = await _userService.getUser(userId: receiverId);
+      user.call(res);
+    } catch (error) {
+      if (Get.isSnackbarOpen) Get.closeAllSnackbars();
+      Get.snackbar(
+        'Thông Báo',
+        'Kết nối internet thất bại',
+        backgroundColor: Get.theme.colorScheme.error,
+      );
+      Get.log(
+        error.toString(),
+      );
+    }
+  }
+
+  Future<void> dataUser() async {
     final prefs = await SharedPreferences.getInstance();
-    isLogin.value = prefs.getBool(AuthValueConst.isLogin) ?? false;
+    // isLogin.value = prefs.getBool(AuthValueConst.isLogin) ?? false;
     token.value = prefs.getString(AuthValueConst.token) ?? '';
     userid.value = prefs.getInt(AuthValueConst.userId) ?? -1;
   }
@@ -29,6 +46,7 @@ class CheckLoginController extends GetxController {
     await prefs.setInt(AuthValueConst.userId, userId);
     await prefs.setString(AuthValueConst.token, token);
     await prefs.setBool(AuthValueConst.isLogin, true);
+    dataUser();
   }
 
   Future<void> logOut() async {

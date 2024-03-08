@@ -4,35 +4,35 @@ class PostCreateGroupBody extends Equatable {
   const PostCreateGroupBody({
     required this.groupName,
     required this.createdBy,
-    required this.member,
+    required this.members,
   });
   final String groupName;
   final int createdBy;
-  final List<MemberList> member;
+  final List<MemberList> members;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'groupName': groupName,
       'createdBy': createdBy,
-      'member': member.map((e) => e.toJson()).toList(),
+      'members': members.map((e) => e.toJson()).toList(),
     };
   }
 
   PostCreateGroupBody copyWith({
     String? groupName,
     int? createdBy,
-    List<MemberList>? member,
+    List<MemberList>? members,
   }) {
     return PostCreateGroupBody(
       groupName: groupName ?? this.groupName,
       createdBy: createdBy ?? this.createdBy,
-      member: member ?? this.member,
+      members: members ?? this.members,
     );
   }
 
   @override
   String toString() {
-    return 'PostCreateGroupBody(groupName: $groupName, createdBy: $createdBy,member: $member)';
+    return 'PostCreateGroupBody(groupName: $groupName, createdBy: $createdBy,member: $members)';
   }
 
   @override
@@ -40,7 +40,7 @@ class PostCreateGroupBody extends Equatable {
   List<Object?> get props => [
         groupName,
         createdBy,
-        member,
+        members,
       ];
 }
 
@@ -53,7 +53,7 @@ class MemberList extends Equatable {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      'userId': userId,
+      'userid': userId,
     };
   }
 

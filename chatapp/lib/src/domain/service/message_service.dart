@@ -6,7 +6,7 @@ import 'package:chatapp/src/domain/requests/bodys/post_send_message_body.dart';
 abstract interface class MessageService {
   Future<List<GroupModel>> getGroups({required int userId});
 
-  Future<GroupModel> createGroup({required PostCreateGroupBody group});
+  Future<GroupModel> createGroup({required PostCreateGroupBody body});
 
   Future<List<MessagesModel>> messages({required int groupId});
 

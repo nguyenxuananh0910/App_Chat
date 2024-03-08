@@ -8,7 +8,9 @@ import 'package:chatapp/src/infrastructure/repositories/messages_repository.dart
 import 'package:chatapp/src/infrastructure/repositories/user_repository.dart';
 import 'package:chatapp/src/presentation/controller/checklogin_controller.dart';
 import 'package:dio/dio.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:get/get.dart';
+import 'package:signalr_netcore/hub_connection_builder.dart';
 
 class GlobalBinding extends Bindings {
   @override
@@ -23,7 +25,7 @@ class GlobalBinding extends Bindings {
     Get.put<UserClient>(
       UserClient(
         Get.find<Dio>(tag: AuthValueConst.dioTAG),
-        baseUrl: 'http://192.168.1.81:8024',
+        baseUrl: AuthValueConst.baseApiUrl,
       ),
       permanent: true,
       tag: AuthValueConst.userClientTAG,
@@ -38,7 +40,7 @@ class GlobalBinding extends Bindings {
     Get.put<MessagesClient>(
       MessagesClient(
         Get.find<Dio>(tag: AuthValueConst.dioTAG),
-        baseUrl: 'http://192.168.1.81:8024',
+        baseUrl: AuthValueConst.baseApiUrl,
       ),
       permanent: true,
       tag: AuthValueConst.messageClientTAG,
@@ -50,5 +52,6 @@ class GlobalBinding extends Bindings {
     );
 
     Get.put(CheckLoginController(), permanent: true);
+    Get.put(EventBus(), permanent: true);
   }
 }

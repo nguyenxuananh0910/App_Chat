@@ -21,5 +21,5 @@ abstract class UserClient {
   Future getUser(@Path('userId') int userId);
 
   @GET('/users')
-  Future getUsers();
+  Future getUsers(@Query('userId') int userId);
 }

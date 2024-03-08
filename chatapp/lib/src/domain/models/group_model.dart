@@ -1,4 +1,5 @@
 import 'package:chatapp/src/domain/models/group_members_model.dart';
+import 'package:chatapp/src/domain/models/messages_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'group_model.g.dart';
@@ -13,7 +14,7 @@ class GroupModel {
     this.createdAt,
     this.members,
   });
-  @JsonKey(name: 'groupid')
+  @JsonKey(name: 'groupId')
   int? groupId;
   @JsonKey(name: 'name')
   String? groupName;
@@ -25,6 +26,8 @@ class GroupModel {
   DateTime? createdAt;
   @JsonKey(name: 'members')
   List<GroupMemberModel>? members;
+  @JsonKey(name: 'lastMessage')
+  MessagesModel? lastMessage;
   factory GroupModel.fromJson(Map<String, dynamic> json) =>
       _$GroupModelFromJson(json);
 

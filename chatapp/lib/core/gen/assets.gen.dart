@@ -15,15 +15,19 @@ class $AssetsImagesGen {
   /// File path: assets/images/chat.png
   AssetGenImage get chat => const AssetGenImage('assets/images/chat.png');
 
-  /// File path: assets/images/no_image_user.jpg
+  /// File path: assets/images/group_avatar.png
+  AssetGenImage get groupAvatar =>
+      const AssetGenImage('assets/images/group_avatar.png');
+
+  /// File path: assets/images/no_image_user.png
   AssetGenImage get noImageUser =>
-      const AssetGenImage('assets/images/no_image_user.jpg');
+      const AssetGenImage('assets/images/no_image_user.png');
 
   /// File path: assets/images/nodata.png
   AssetGenImage get nodata => const AssetGenImage('assets/images/nodata.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [chat, noImageUser, nodata];
+  List<AssetGenImage> get values => [chat, groupAvatar, noImageUser, nodata];
 }
 
 class Assets {

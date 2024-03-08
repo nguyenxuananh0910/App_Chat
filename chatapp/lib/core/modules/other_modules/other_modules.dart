@@ -7,9 +7,9 @@ class OtherModules {
       BaseOptions(
         headers: {'Content-Type': 'application/json'},
         followRedirects: true,
-        sendTimeout: const Duration(seconds: 20),
+        sendTimeout: const Duration(seconds: 25),
         receiveTimeout: const Duration(seconds: 25),
-        connectTimeout: const Duration(seconds: 20),
+        connectTimeout: const Duration(seconds: 25),
       ),
     );
     // init some interceptors here

@@ -9,75 +9,60 @@ import 'package:chatapp/src/domain/requests/bodys/post_create_group_body.dart';
 import 'package:chatapp/src/domain/service/message_service.dart';
 import 'package:chatapp/src/domain/service/user_service.dart';
 import 'package:chatapp/src/presentation/controller/checklogin_controller.dart';
+import 'package:chatapp/src/presentation/controller/signalr_conect.dart';
 import 'package:chatapp/src/presentation/pages/chat/room_chat/room_chat_controller.dart';
 import 'package:event_bus/event_bus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class HomeController extends GetxController {
-  final RxList<UserModel> users = <UserModel>[].obs;
   final RxList<GroupModel> groups = <GroupModel>[].obs;
   late PagingController<int, GroupModel> pagingGroupController;
-  late PagingController<int, UserModel> pagingUserController;
   final scrollController = ScrollController();
-  final int _pageSize = 10;
+  // final int _pageSize = 10;
   int currentPage = 1;
-  final UserService _userService =
-      Get.find(tag: AuthValueConst.uerSerServiceTAG);
+
   final MessageService _messageService =
       Get.find(tag: AuthValueConst.messageServiceTAG);
   final CheckLoginController checkLoginController = Get.find();
   final RxBool isLoading = true.obs;
   late TextEditingController nameGroupEditController;
   final RxList<UserModel> selectedUsers = <UserModel>[].obs;
-  EventBus eventBus = Get.find();
   StreamSubscription? streamSubscription;
+  final SignalRService _signalRService = SignalRService();
   @override
   void onInit() {
     super.onInit();
-    pagingUserController = PagingController(firstPageKey: 0);
-    pagingUserController.addPageRequestListener(fetchUsers);
+
     pagingGroupController = PagingController(firstPageKey: 0);
-    pagingGroupController.addPageRequestListener(fetchGroup);
-    nameGroupEditController = TextEditingController();
-    listenEventClear();
+    fetchGroup();
+    // pagingGroupController.addPageRequestListener(fetchGroup);
+    // nameGroupEditController = TextEditingController();
+    _connectToSignalR();
   }
 
-  void listenEventClear() {
-    streamSubscription = eventBus.on<ReloadGroup>().listen((event) {
-      pagingGroupController.refresh();
-    });
-  }
-
-  Future fetchUsers(int pageKey) async {
+  void _connectToSignalR() async {
     try {
-      final res = await _userService.getUsers(
-          userId: checkLoginController.userid.value);
-      users.call(res);
+      _signalRService.connect();
 
-      // users.length < _pageSize
-      //     ?
-      pagingUserController.appendLastPage(users);
-      // : pagingUserController.appendPage(
-      //     users,
-      //     pageKey + users.length,
-      //   );
-    } catch (error) {
-      pagingUserController.error = error;
-      if (Get.isSnackbarOpen) Get.closeAllSnackbars();
-      Get.snackbar(
-        'Thông Báo',
-        'Kết nối internet thất bại',
-        backgroundColor: Get.theme.colorScheme.error,
-      );
-      Get.log(
-        error.toString(),
-      );
+      _signalRService.connection.on('ReceiveGroupCreated', (data) {
+        Get.log('connection success');
+        // Assuming data is a List and you want to access the first map in the list
+        if (data is List) {
+          final newGroup = GroupModel.fromJson(data[0] as Map<String, dynamic>);
+          fetchGroup();
+          groups.add(newGroup);
+        }
+      });
+    } catch (e) {
+      Get.log('error');
+      Get.log(e.toString());
     }
   }
 
-  Future fetchGroup(int pageKey) async {
+  Future fetchGroup() async {
     try {
       final res = await _messageService.getGroups(
           userId: checkLoginController.userid.value);
@@ -120,7 +105,7 @@ class HomeController extends GetxController {
             userAId: selectedUsers.first.userId!,
             userBId: checkLoginController.userid.value);
 
-        if (res.isEmpty && res == null) {
+        if (res.isEmpty) {
           try {
             final res = await _messageService.createGroup(
               body: PostCreateGroupBody(
@@ -128,6 +113,7 @@ class HomeController extends GetxController {
                     ? [
                         ...List.generate(selectedUsers.length,
                             (int index) => selectedUsers[index].fullName),
+                        checkLoginController.user.value?.fullName ?? '',
                       ].join(',')
                     : nameGroupEditController.text.trim(),
                 createdBy: checkLoginController.userid.value,
@@ -203,7 +189,6 @@ class HomeController extends GetxController {
   }
 
   Future<void> onRefresh() async {
-    pagingUserController.refresh();
     pagingGroupController.refresh();
   }
 }

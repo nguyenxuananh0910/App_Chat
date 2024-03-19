@@ -7,44 +7,42 @@ import 'package:chatapp/src/domain/requests/bodys/post_create_group_body.dart';
 import 'package:chatapp/src/domain/requests/bodys/post_send_message_body.dart';
 import 'package:chatapp/src/domain/service/message_service.dart';
 import 'package:chatapp/src/presentation/controller/checklogin_controller.dart';
+import 'package:chatapp/src/presentation/controller/signalr_conect.dart';
 import 'package:chatapp/src/presentation/pages/chat/home_controller.dart';
 import 'package:event_bus/event_bus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:signalr_netcore/signalr_client.dart';
 
 class RoomChatController extends GetxController {
   final RxList<MessagesModel> messages = <MessagesModel>[].obs;
   final RxList<GroupModel> groups = <GroupModel>[].obs;
   late PagingController<int, MessagesModel> pagingController;
   final scrollController = ScrollController();
-  final int _pageSize = 10;
   int currentPage = 1;
   final CheckLoginController checkLoginController = Get.find();
   final MessageService _messageService =
       Get.find(tag: AuthValueConst.messageServiceTAG);
   late TextEditingController messageEditController;
   late ArgRoomChat argRoomChat;
-  final hubConnection = HubConnectionBuilder()
-      .withUrl('${AuthValueConst.baseApiUrl}/message-hub')
-      .build();
   final Rxn<GroupModel> newGroup = Rxn<GroupModel>();
-  final EventBus eventBus = Get.find();
+  final SignalRService _signalRService = SignalRService();
+  final RxBool isLoading = true.obs;
   @override
   void onInit() {
     super.onInit();
     argRoomChat = Get.arguments as ArgRoomChat;
     _connectToSignalR();
-    // pagingController = PagingController(firstPageKey: 0);
     fetchMessages();
-    // pagingController.addPageRequestListener(fetchMessages);
     messageEditController = TextEditingController();
   }
 
   void _connectToSignalR() async {
     try {
-      hubConnection.on('ReceiveMessage', (data) {
+      _signalRService.connect();
+
+      _signalRService.connection.on('ReceiveMessage', (data) {
         Get.log('connection success');
         // Assuming data is a List and you want to access the first map in the list
         if (data is List) {
@@ -53,17 +51,13 @@ class RoomChatController extends GetxController {
           if (message.groupId == argRoomChat.group?.groupId ||
               message.groupId == newGroup.value?.groupId ||
               message.groupId == messages[0].groupId) {
-            eventBus.fire(ReloadGroup());
             messages.add(message);
-            // pagingController.refresh();
           }
         } else {
           // Handle the case where data is not a List
           Get.log('Data is not a list');
         }
       });
-
-      await hubConnection.start();
     } catch (e) {
       Get.log('error');
       Get.log(e.toString());
@@ -71,6 +65,7 @@ class RoomChatController extends GetxController {
   }
 
   Future fetchMessages() async {
+    // isLoading.call(true);
     if (argRoomChat.group?.groupId != null) {
       try {
         final res = await _messageService.messages(
@@ -130,6 +125,7 @@ class RoomChatController extends GetxController {
     } else {
       messages.call(null);
     }
+    isLoading.call(false);
   }
 
   void sendMessage() async {
@@ -157,39 +153,40 @@ class RoomChatController extends GetxController {
     // messageEditController.text = '';
     try {
       if (messageEditController.text != '') {
-        final res = await _messageService.sendMessage(
+        await _messageService.sendMessage(
           message: PostSendMessageBody(
-              receiverId: argRoomChat.receiver?.userId != null
-                  ? argRoomChat.receiver!.userId!
-                  : (newGroup.value?.groupId ??
-                      argRoomChat.group?.groupId! ??
-                      -1),
-              senderId: checkLoginController.userid.value,
-              groupId: argRoomChat.group?.groupId != null
-                  ? argRoomChat.group!.groupId!
-                  : (newGroup.value?.groupId != null
-                      ? newGroup.value!.groupId!
-                      : messages[0].groupId!),
-              content: messageEditController.text.trim(),
-              type: 1),
+            receiverId: argRoomChat.receiver?.userId != null
+                ? argRoomChat.receiver!.userId!
+                : (newGroup.value?.groupId),
+            senderId: checkLoginController.userid.value,
+            groupId: argRoomChat.group?.groupId != null
+                ? argRoomChat.group!.groupId!
+                : (newGroup.value?.groupId != null
+                    ? newGroup.value!.groupId!
+                    : messages[0].groupId!),
+            content: messageEditController.text.trim(),
+            type: 1,
+          ),
         );
+        messageEditController.clear();
         messageEditController.text = '';
         // messages.add(res);
         // await hubConnection.invoke("SendMessage", args: [res]);
       }
       messageEditController.text = '';
+      messageEditController.clear();
     } catch (e) {
       Get.log('error');
       Get.log(e.toString());
     }
   }
 
-  @override
-  void dispose() {
-    pagingController.dispose();
-    hubConnection.stop();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   pagingController.dispose();
+  //   _signalRService.disconnect();
+  //   super.dispose();
+  // }
 }
 
 class ArgRoomChat {

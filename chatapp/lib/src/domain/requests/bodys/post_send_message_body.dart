@@ -2,13 +2,13 @@ import 'package:equatable/equatable.dart';
 
 class PostSendMessageBody extends Equatable {
   const PostSendMessageBody({
-    required this.receiverId,
+    this.receiverId,
     required this.senderId,
     required this.groupId,
     required this.content,
     required this.type,
   });
-  final int receiverId;
+  final int? receiverId;
   final int senderId;
   final int groupId;
   final String content;
@@ -41,7 +41,7 @@ class PostSendMessageBody extends Equatable {
 
   @override
   String toString() {
-    return 'PostSendMessageBody(receiverId: $receiverId, senderId: $senderId,groupId: $groupId, content: $content, type: $type)';
+    return 'PostSendMessageBody(receiverId: $receiverId, senderId: $senderId,groupId: $groupId, content: $content, type: $type, )';
   }
 
   @override

@@ -1,50 +1,44 @@
 import 'package:equatable/equatable.dart';
 
-class PostSignBody extends Equatable {
-  const PostSignBody({
-    required this.email,
+class PostLoginBody extends Equatable {
+  const PostLoginBody({
     required this.password,
     required this.username,
-    required this.fullName,
+    required this.msgToken,
   });
-  final String email;
   final String username;
   final String password;
-  final String fullName;
+  final String msgToken;
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      'email': email,
       'username': username,
       'password': password,
-      'fullname': fullName,
+      'msgToken': msgToken,
     };
   }
 
-  PostSignBody copyWith({
-    String? email,
+  PostLoginBody copyWith({
     String? username,
     String? password,
-    String? fullName,
+    String? msgToken,
   }) {
-    return PostSignBody(
-      email: email ?? this.email,
+    return PostLoginBody(
       username: username ?? this.username,
       password: password ?? this.password,
-      fullName: fullName ?? this.fullName,
+      msgToken: msgToken ?? this.msgToken,
     );
   }
 
   @override
   String toString() {
-    return 'PostSignBody(email: $email, username: $username, password: $password,fullName: $fullName)';
+    return 'PostLoginBody( username: $username, password: $password,msgToken: $msgToken)';
   }
 
   @override
   // TODO: implement props
   List<Object?> get props => [
-        email,
         username,
         password,
-        fullName,
+        msgToken,
       ];
 }

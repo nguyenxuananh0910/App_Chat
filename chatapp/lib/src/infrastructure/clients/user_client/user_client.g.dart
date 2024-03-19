@@ -46,17 +46,12 @@ class _UserClient implements UserClient {
   }
 
   @override
-  Future<dynamic> loginUser({
-    required String username,
-    required String password,
-  }) async {
+  Future<dynamic> loginUser(PostLoginBody body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = {
-      'username': username,
-      'password': password,
-    };
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
     final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
       method: 'POST',
       headers: _headers,
@@ -117,6 +112,35 @@ class _UserClient implements UserClient {
         .compose(
           _dio.options,
           '/users',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
+    final value = _result.data;
+    return value;
+  }
+
+  @override
+  Future<dynamic> updateUserStatus(
+    int userId,
+    bool status,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/updateStatusUser/${userId}/${status}',
           queryParameters: queryParameters,
           data: _data,
         )

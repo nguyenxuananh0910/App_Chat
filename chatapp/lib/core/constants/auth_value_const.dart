@@ -21,5 +21,5 @@ class AuthValueConst {
   static const String messageServiceTAG = 'MessageModule|MessageService';
 
   static const String dioTAG = 'app|Dio';
-  static const String baseApiUrl = 'http://192.168.1.96:8024';
+  static const String baseApiUrl = 'http://192.168.1.130:8024';
 }

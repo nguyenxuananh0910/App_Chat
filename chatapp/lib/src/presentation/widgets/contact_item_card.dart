@@ -20,7 +20,7 @@ class ContactItemCard extends StatelessWidget {
             CircleAvatarWithErrorHandler(
               fullName: data.fullName,
             ),
-            if (data.status == 1)
+            if (data.status == true)
               const Positioned(
                 bottom: 6,
                 right: 2,

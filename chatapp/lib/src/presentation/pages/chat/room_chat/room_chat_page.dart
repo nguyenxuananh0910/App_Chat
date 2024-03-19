@@ -1,8 +1,9 @@
-import 'package:chatapp/core/router/app_router.dart';
+import 'package:chatapp/core/gen/assets.gen.dart';
 import 'package:chatapp/src/domain/models/messages_model.dart';
 import 'package:chatapp/src/presentation/pages/chat/room_chat/room_chat_controller.dart';
 import 'package:chatapp/src/presentation/pages/chat/room_chat/widgets_chat/left_content.dart';
 import 'package:chatapp/src/presentation/pages/chat/room_chat/widgets_chat/right_content.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -55,99 +56,98 @@ class RoomChatPage extends GetView<RoomChatController> {
         child: Column(
           children: [
             Expanded(
-              child: Obx(
-                () => ListView.builder(
-                  reverse: true,
-                  shrinkWrap: true,
-                  itemCount: controller.messages.length,
-                  itemBuilder: (context, index) {
-                    final reversedList =
-                        List.from(controller.messages.reversed);
-                    final message = reversedList[index];
-                    MessagesModel? lastItem;
-                    if (index > 0) {
-                      lastItem = controller.messages[index - 1];
-                    }
-                    MessagesModel? currentItem = message;
+              child: Obx(() {
+                if (controller.isLoading.isTrue) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return controller.messages.isNotEmpty
+                      ? ListView.builder(
+                          reverse: true,
+                          shrinkWrap: true,
+                          itemCount: controller.messages.length,
+                          itemBuilder: (context, index) {
+                            final reversedList =
+                                List.from(controller.messages.reversed);
+                            final message = reversedList[index];
+                            MessagesModel? lastItem;
+                            if (index > 0) {
+                              lastItem = controller.messages[index - 1];
+                            }
+                            MessagesModel? currentItem = message;
 
-                    MessagesModel? nextItem;
-                    if ((controller.messages.length - 1) > index) {
-                      nextItem = controller.messages[index + 1];
-                    }
+                            MessagesModel? nextItem;
+                            if ((controller.messages.length - 1) > index) {
+                              nextItem = controller.messages[index + 1];
+                            }
 
-                    if (currentItem?.senderId !=
-                        controller.checkLoginController.userid.value) {
-                      return LeftContent(
-                        current: currentItem!,
-                        last: lastItem,
-                        next: nextItem,
-                      );
-                    }
-                    return RightContent(
-                      current: currentItem!,
-                      last: lastItem,
-                      next: nextItem,
-                      currentIndex: index,
-                    );
-                  },
-                ),
-              ),
-              // child: PagedListView<int, MessagesModel>(
-              //   shrinkWrap: true,
-              //   reverse: true,
-              //   pagingController: controller.pagingController,
-              //   builderDelegate: PagedChildBuilderDelegate(
-              //     itemBuilder: (
-              //       BuildContext context,
-              //       MessagesModel item,
-              //       int index,
-              //     ) {
-              //       final message = controller.messages[index];
-              //       MessagesModel? lastItem;
-              //       if (index > 0) {
-              //         lastItem = controller.messages[index - 1];
-              //       }
-              //       MessagesModel? currentItem = message;
-              //
-              //       MessagesModel? nextItem;
-              //       if ((controller.messages.length - 1) > index) {
-              //         nextItem = controller.messages[index + 1];
-              //       }
-              //
-              //       if (currentItem.senderId !=
-              //           controller.checkLoginController.userid.value) {
-              //         return LeftContent(
-              //           current: currentItem,
-              //           last: lastItem,
-              //           next: nextItem,
-              //         );
-              //       }
-              //       return RightContent(
-              //         current: currentItem,
-              //         last: lastItem,
-              //         next: nextItem,
-              //         currentIndex: index,
-              //       );
-              //     },
-              //     newPageProgressIndicatorBuilder: (context) => SizedBox(
-              //       height: 30,
-              //       child: Center(
-              //         child: CupertinoActivityIndicator(
-              //           color: Get.theme.colorScheme.primary,
-              //         ),
-              //       ),
-              //     ),
-              //     firstPageErrorIndicatorBuilder: (context) =>
-              //         const SizedBox.shrink(),
-              //     newPageErrorIndicatorBuilder: (context) =>
-              //         const CustomNoDataWidget(
-              //       noiDung: 'Có lỗi xảy ra. Vui lòng thử lại!',
-              //       isSearch: false,
-              //     ),
-              //     noItemsFoundIndicatorBuilder: (context) =>
-              //         const SizedBox.shrink(),
-              //   ),
-              // ),
+                            if (currentItem?.senderId !=
+                                controller.checkLoginController.userid.value) {
+                              return LeftContent(
+                                current: currentItem!,
+                                last: lastItem,
+                                next: nextItem,
+                              );
+                            }
+                            return RightContent(
+                              current: currentItem!,
+                              last: lastItem,
+                              next: nextItem,
+                              currentIndex: index,
+                            );
+                          },
+                        )
+                      : Center(
+                          child: Container(
+                            width: 300,
+                            height: 240,
+                            decoration: BoxDecoration(
+                                color: Colors.red.shade100,
+                                borderRadius: BorderRadius.circular(14)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Chúng ta chưa có tin nhắn nào ở đây...",
+                                    style: Get.theme.textTheme.bodyMedium,
+                                  ),
+                                  Text(
+                                    "bắt đầu gửi tin nhắn ngay nào!",
+                                    style: Get.theme.textTheme.titleMedium,
+                                  ),
+                                  SizedBox(
+                                    width: 200,
+                                    child: ExtendedImage.network(
+                                      'https://cdn.dribbble.com/userupload/3271927/file/original-223856aa8fef836d7bc818da6154f3ab.gif',
+                                      fit: BoxFit.cover,
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5)),
+                                      shape: BoxShape.rectangle,
+                                      loadStateChanged:
+                                          (ExtendedImageState state) {
+                                        switch (state.extendedImageLoadState) {
+                                          case LoadState.loading:
+                                            return const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+                                          case LoadState.completed:
+                                            return null;
+                                          case LoadState.failed:
+                                            return Image.asset(
+                                              Assets.images.nodata.path,
+                                            );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                }
+              }),
             ),
             const GetBottomBar(),
           ],

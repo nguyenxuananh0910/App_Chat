@@ -31,5 +31,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
     </application>
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+
 </manifest>

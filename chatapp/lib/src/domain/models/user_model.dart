@@ -29,7 +29,7 @@ class UserModel {
   @JsonKey(name: 'token')
   String? token;
   @JsonKey(name: 'status')
-  int? status;
+  bool? status;
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 

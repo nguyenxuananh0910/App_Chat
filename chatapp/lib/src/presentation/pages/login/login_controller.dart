@@ -1,12 +1,14 @@
 import 'package:chatapp/core/constants/auth_value_const.dart';
 import 'package:chatapp/core/router/app_router.dart';
+import 'package:chatapp/src/domain/requests/bodys/post_login_body.dart';
 import 'package:chatapp/src/domain/service/user_service.dart';
 import 'package:chatapp/src/presentation/controller/checklogin_controller.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-  late TextEditingController emailEditController;
+  late TextEditingController userNameEditController;
   late TextEditingController passwordEditController;
   bool isChecked = false;
   final RxBool isLoading = false.obs;
@@ -17,8 +19,8 @@ class LoginController extends GetxController {
   final CheckLoginController checkLoginController = Get.find();
   @override
   void onInit() {
-    emailEditController = TextEditingController(text: 'XuanAnh');
-    passwordEditController = TextEditingController(text: 'Anh12345@');
+    userNameEditController = TextEditingController(text: 'XuanAnh');
+    passwordEditController = TextEditingController(text: 'Anh123456@');
     super.onInit();
   }
 
@@ -29,7 +31,6 @@ class LoginController extends GetxController {
   Future<void> onSend() async {
     if (keyForm.currentState!.validate()) {
       login();
-      _cleanInput();
     }
   }
 
@@ -39,14 +40,21 @@ class LoginController extends GetxController {
 
   Future login() async {
     isLoading.call(true);
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? msgToken = await messaging.getToken();
     try {
       final res = await _userService.loginUser(
-          username: emailEditController.text.trim(),
-          password: passwordEditController.text.trim());
+        body: PostLoginBody(
+            username: userNameEditController.text.trim(),
+            password: passwordEditController.text.trim(),
+            msgToken: msgToken ?? ''),
+      );
       await checkLoginController.login(
         userId: res.userId ?? -1,
         token: res.token ?? '',
       );
+      _cleanInput();
+
       Get.offAllNamed(AppRouter.dashboardPage);
     } catch (e) {
       Get.snackbar(
@@ -59,7 +67,7 @@ class LoginController extends GetxController {
   }
 
   void _cleanInput() {
-    emailEditController.text = '';
+    userNameEditController.text = '';
     passwordEditController.text = '';
   }
 }

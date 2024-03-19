@@ -184,110 +184,124 @@ class ListUserView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: PagedListView<int, UserModel>.separated(
-        shrinkWrap: true,
-        pagingController: controller.pagingUserController,
-        builderDelegate: PagedChildBuilderDelegate(
-          itemBuilder: (
-            BuildContext context,
-            UserModel item,
-            int index,
-          ) {
-            return InkWell(
-              onTap: () {
-                controller.selectListUsers(item);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Stack(
-                        children: [
-                          ClipOval(
-                            child: ExtendedImage.asset(
-                              Assets.images.noImageUser.path,
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(6),
+      child: Obx(() => ListView.separated(
+            itemBuilder: (context, index) {
+              final item = controller.checkLoginController.users[index];
+              return InkWell(
+                onTap: () {
+                  controller.selectListUsers(item);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Stack(
+                          children: [
+                            ClipOval(
+                              child: ExtendedImage.asset(
+                                Assets.images.noImageUser.path,
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(6),
+                                ),
+                                shape: BoxShape.rectangle,
                               ),
-                              shape: BoxShape.rectangle,
                             ),
-                          ),
-                          const Positioned(
-                            bottom: 0,
-                            right: 10,
-                            child: Icon(
-                              Icons.circle,
-                              size: 14,
-                              color: Colors.green,
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        item.fullName ?? '',
-                        style: Get.textTheme.titleMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
+                            if (item.status == true)
+                              const Positioned(
+                                bottom: 0,
+                                right: 2,
+                                child: Icon(
+                                  Icons.circle,
+                                  size: 14,
+                                  color: Colors.green,
+                                ),
+                              )
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                  Obx(
-                    () => Icon(
-                      controller.selectedUsers.contains(item)
-                          ? Icons.check_circle
-                          : Icons.circle_outlined,
-                      color: controller.selectedUsers.contains(item)
-                          ? Colors.green
-                          : null,
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          item.fullName ?? '',
+                          style: Get.textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  )
-                ],
-              ),
-            );
-          },
-          noItemsFoundIndicatorBuilder: (context) => const CustomNoDataWidget(
-            noiDung: 'Không có dữ liệu',
-            isSearch: false,
-          ),
-          firstPageProgressIndicatorBuilder: (context) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: Colors.red,
-              ),
-            );
-          },
-          newPageProgressIndicatorBuilder: (context) => SizedBox(
-            height: 30,
-            child: Center(
-              child: CupertinoActivityIndicator(
-                color: Get.theme.colorScheme.primary,
-              ),
+                    Obx(
+                      () => Icon(
+                        controller.selectedUsers.contains(item)
+                            ? Icons.check_circle
+                            : Icons.circle_outlined,
+                        color: controller.selectedUsers.contains(item)
+                            ? Colors.green
+                            : null,
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(
+              color: Colors.black12,
+              indent: 70,
+              endIndent: 10,
             ),
-          ),
-          firstPageErrorIndicatorBuilder: (context) => const CustomNoDataWidget(
-            noiDung: 'Không có dữ liệu',
-            isSearch: false,
-          ),
-          newPageErrorIndicatorBuilder: (context) => const CustomNoDataWidget(
-            noiDung: 'Có lỗi xảy ra. Vui lòng thử lại!',
-            isSearch: false,
-          ),
-        ),
-        separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            color: Colors.black12,
-            indent: 70,
-            endIndent: 10,
-          );
-        },
-      ),
+            itemCount: controller.checkLoginController.users.length,
+          )),
+      // child: PagedListView<int, UserModel>.separated(
+      //   shrinkWrap: true,
+      //   pagingController: controller.checkLoginController.pagingUserController,
+      //   builderDelegate: PagedChildBuilderDelegate(
+      //     itemBuilder: (
+      //       BuildContext context,
+      //       UserModel item,
+      //       int index,
+      //     ) {
+      //
+      //     },
+      //     noItemsFoundIndicatorBuilder: (context) => const CustomNoDataWidget(
+      //       noiDung: 'Không có dữ liệu',
+      //       isSearch: false,
+      //     ),
+      //     firstPageProgressIndicatorBuilder: (context) {
+      //       return const Center(
+      //         child: CircularProgressIndicator(
+      //           color: Colors.red,
+      //         ),
+      //       );
+      //     },
+      //     newPageProgressIndicatorBuilder: (context) => SizedBox(
+      //       height: 30,
+      //       child: Center(
+      //         child: CupertinoActivityIndicator(
+      //           color: Get.theme.colorScheme.primary,
+      //         ),
+      //       ),
+      //     ),
+      //     firstPageErrorIndicatorBuilder: (context) => const CustomNoDataWidget(
+      //       noiDung: 'Không có dữ liệu',
+      //       isSearch: false,
+      //     ),
+      //     newPageErrorIndicatorBuilder: (context) => const CustomNoDataWidget(
+      //       noiDung: 'Có lỗi xảy ra. Vui lòng thử lại!',
+      //       isSearch: false,
+      //     ),
+      //   ),
+      //   separatorBuilder: (BuildContext context, int index) {
+      //     return const Divider(
+      //       color: Colors.black12,
+      //       indent: 70,
+      //       endIndent: 10,
+      //     );
+      //   },
+      // ),
     );
   }
 }

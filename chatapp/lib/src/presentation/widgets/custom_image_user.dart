@@ -1,4 +1,3 @@
-import 'package:chatapp/core/gen/assets.gen.dart';
 import 'package:chatapp/core/utils/helpers/string_ext.dart';
 import 'package:flutter/material.dart';
 

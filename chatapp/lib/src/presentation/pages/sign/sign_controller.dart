@@ -24,8 +24,8 @@ class SignController extends GetxController {
   @override
   void onInit() {
     emailEditController = TextEditingController(text: 'anh@gmail.com');
-    usernameEditController = TextEditingController(text: 'anh123');
-    passwordEditController = TextEditingController(text: '123456');
+    usernameEditController = TextEditingController(text: 'AnhTuan');
+    passwordEditController = TextEditingController(text: 'Tuan123456@');
     nameEditController = TextEditingController(text: 'Nguyen Anh Tuan');
     confirmPasswordEditController = TextEditingController();
     super.onInit();
@@ -81,7 +81,8 @@ class SignController extends GetxController {
   }
 
   void _cleanInput() {
-    nameEditController.text = '';
+    nameEditController.clear();
+    usernameEditController.text = '';
     confirmPasswordEditController.text = '';
     emailEditController.text = '';
     passwordEditController.text = '';

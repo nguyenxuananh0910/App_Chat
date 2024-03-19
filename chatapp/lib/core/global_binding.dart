@@ -7,10 +7,10 @@ import 'package:chatapp/src/infrastructure/clients/user_client/user_client.dart'
 import 'package:chatapp/src/infrastructure/repositories/messages_repository.dart';
 import 'package:chatapp/src/infrastructure/repositories/user_repository.dart';
 import 'package:chatapp/src/presentation/controller/checklogin_controller.dart';
+import 'package:chatapp/src/presentation/controller/signalr_conect.dart';
 import 'package:dio/dio.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:get/get.dart';
-import 'package:signalr_netcore/hub_connection_builder.dart';
 
 class GlobalBinding extends Bindings {
   @override
@@ -52,6 +52,6 @@ class GlobalBinding extends Bindings {
     );
 
     Get.put(CheckLoginController(), permanent: true);
-    Get.put(EventBus(), permanent: true);
+    Get.put(SignalRService(), permanent: true);
   }
 }

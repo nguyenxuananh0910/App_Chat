@@ -9,7 +9,6 @@ import 'package:chatapp/src/presentation/widgets/custom_no_data_widget.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -31,17 +30,15 @@ class HomePage extends GetView<HomeController> {
       ),
       body: const Padding(
         padding: EdgeInsets.all(12.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListUsers(),
-              SizedBox(
-                height: 10,
-              ),
-              ListGroupView(),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListUsers(),
+            SizedBox(
+              height: 10,
+            ),
+            ListGroupView(),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -60,90 +57,58 @@ class ListUsers extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 100,
-      child: PagedListView<int, UserModel>.separated(
-          shrinkWrap: true,
+      child: Obx(() => ListView.separated(
           scrollDirection: Axis.horizontal,
-          pagingController: controller.pagingUserController,
-          builderDelegate: PagedChildBuilderDelegate(
-            itemBuilder: (
-              BuildContext context,
-              UserModel item,
-              int index,
-            ) {
-              return InkWell(
-                onTap: () => Get.toNamed(
-                  AppRouter.roomChatPage,
-                  arguments: ArgRoomChat(receiver: item),
-                ),
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        ClipOval(
-                          child: ExtendedImage.asset(
-                            Assets.images.noImageUser.path,
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(6),
-                            ),
-                            shape: BoxShape.rectangle,
-                          ),
-                        ),
-                        if (item.status == 1)
-                          const Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Icon(
-                              Icons.circle,
-                              size: 14,
-                              color: Colors.green,
-                            ),
-                          )
-                      ],
-                    ),
-                    Text(
-                      item.fullName?.split(' ').last ?? '',
-                      style: Get.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-            noItemsFoundIndicatorBuilder: (context) => const CustomNoDataWidget(
-              noiDung: 'Không có dữ liệu',
-              isSearch: false,
-            ),
-            firstPageProgressIndicatorBuilder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.red,
-                ),
-              );
-            },
-            newPageProgressIndicatorBuilder: (context) => SizedBox(
-              height: 30,
-              child: Center(
-                child: CupertinoActivityIndicator(
-                  color: Get.theme.colorScheme.primary,
-                ),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final item = controller.checkLoginController.users[index];
+            return InkWell(
+              onTap: () => Get.toNamed(
+                AppRouter.roomChatPage,
+                arguments: ArgRoomChat(receiver: item),
               ),
-            ),
-            firstPageErrorIndicatorBuilder: (context) =>
-                const SizedBox.shrink(),
-            newPageErrorIndicatorBuilder: (context) => const CustomNoDataWidget(
-              noiDung: 'Có lỗi xảy ra. Vui lòng thử lại!',
-              isSearch: false,
-            ),
-          ),
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              width: 20,
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      ClipOval(
+                        child: ExtendedImage.asset(
+                          Assets.images.noImageUser.path,
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(6),
+                          ),
+                          shape: BoxShape.rectangle,
+                        ),
+                      ),
+                      if (item.status == true)
+                        const Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Icon(
+                            Icons.circle,
+                            size: 14,
+                            color: Colors.green,
+                          ),
+                        )
+                    ],
+                  ),
+                  Text(
+                    item.fullName?.split(' ').last ?? '',
+                    style: Get.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             );
-          }),
+          },
+          separatorBuilder: (_, __) => const SizedBox(
+                width: 20,
+              ),
+          itemCount: controller.checkLoginController.users.length)),
     );
   }
 }
@@ -153,16 +118,11 @@ class ListGroupView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedListView<int, GroupModel>.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      pagingController: controller.pagingGroupController,
-      builderDelegate: PagedChildBuilderDelegate(
-        itemBuilder: (
-          BuildContext context,
-          GroupModel item,
-          int index,
-        ) {
+    return Obx(() => ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final item = controller.groups[index];
           if (item.members?.length == 2) {
             return ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -255,16 +215,14 @@ class ListGroupView extends GetView<HomeController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item.groupName ?? '',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        softWrap: false,
-                        style: Get.theme.textTheme.titleMedium,
-                      ),
+                      Text(item.groupName ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                          style: Get.textTheme.titleMedium),
                       Text(
                         'New Messages',
-                        style: Get.theme.textTheme.titleSmall,
+                        style: Get.textTheme.titleSmall,
                       )
                     ],
                   ),
@@ -273,32 +231,11 @@ class ListGroupView extends GetView<HomeController> {
             ),
           );
         },
-        noItemsFoundIndicatorBuilder: (context) => const SizedBox.shrink(),
-        // firstPageProgressIndicatorBuilder: (context) {
-        //   return const CircularProgressIndicator(
-        //     color: Colors.red,
-        //   );
-        // },
-        newPageProgressIndicatorBuilder: (context) => SizedBox(
-          height: 30,
-          child: Center(
-            child: CupertinoActivityIndicator(
-              color: Get.theme.colorScheme.primary,
-            ),
-          ),
-        ),
-        firstPageErrorIndicatorBuilder: (context) => const CustomNoDataWidget(
-          noiDung: 'Không có dữ liệu',
-          isSearch: false,
-        ),
-        newPageErrorIndicatorBuilder: (context) => const CustomNoDataWidget(
-          noiDung: 'Có lỗi xảy ra. Vui lòng thử lại!',
-          isSearch: false,
-        ),
-      ),
-      separatorBuilder: (_, __) => const SizedBox(
-        width: 20,
-      ),
-    );
+        separatorBuilder: (_, __) {
+          return const SizedBox(
+            height: 20,
+          );
+        },
+        itemCount: controller.groups.length));
   }
 }

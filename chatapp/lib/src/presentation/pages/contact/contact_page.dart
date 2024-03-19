@@ -1,14 +1,9 @@
-import 'dart:ffi';
-
-import 'package:chatapp/core/gen/assets.gen.dart';
 import 'package:chatapp/core/router/app_router.dart';
 import 'package:chatapp/src/domain/models/user_model.dart';
 import 'package:chatapp/src/presentation/pages/chat/room_chat/room_chat_controller.dart';
 import 'package:chatapp/src/presentation/pages/contact/contact_controller.dart';
 import 'package:chatapp/src/presentation/widgets/contact_item_card.dart';
 import 'package:chatapp/src/presentation/widgets/custom_no_data_widget.dart';
-import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -35,15 +30,11 @@ class ContactPage extends GetView<ContactController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PagedListView<int, UserModel>.separated(
-                shrinkWrap: true,
-                pagingController: controller.pagingController,
-                builderDelegate: PagedChildBuilderDelegate(
-                  itemBuilder: (
-                    BuildContext context,
-                    UserModel item,
-                    int index,
-                  ) {
+              ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final item = controller.checkLoginController.users[index];
                     return InkWell(
                       onTap: () => Get.toNamed(
                         AppRouter.roomChatPage,
@@ -58,41 +49,10 @@ class ContactPage extends GetView<ContactController> {
                       ),
                     );
                   },
-                  noItemsFoundIndicatorBuilder: (context) =>
-                      const CustomNoDataWidget(
-                    noiDung: 'Không có dữ liệu',
-                    isSearch: false,
-                  ),
-                  firstPageProgressIndicatorBuilder: (context) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.red,
+                  separatorBuilder: (_, __) => const SizedBox(
+                        height: 20,
                       ),
-                    );
-                  },
-                  newPageProgressIndicatorBuilder: (context) => SizedBox(
-                    height: 30,
-                    child: Center(
-                      child: CupertinoActivityIndicator(
-                        color: Get.theme.colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                  firstPageErrorIndicatorBuilder: (context) =>
-                      const CustomNoDataWidget(
-                    noiDung: 'Không có dữ liệu',
-                    isSearch: false,
-                  ),
-                  newPageErrorIndicatorBuilder: (context) =>
-                      const CustomNoDataWidget(
-                    noiDung: 'Có lỗi xảy ra. Vui lòng thử lại!',
-                    isSearch: false,
-                  ),
-                ),
-                separatorBuilder: (_, __) => const SizedBox(
-                  height: 20,
-                ),
-              )
+                  itemCount: controller.checkLoginController.users.length)
             ],
           ),
         ),

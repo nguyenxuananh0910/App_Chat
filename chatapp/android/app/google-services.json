@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "997236271847",
+    "project_id": "send-notification-3738e",
+    "storage_bucket": "send-notification-3738e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997236271847:android:061cfaa0d40f37580fd042",
+        "android_client_info": {
+          "package_name": "com.example.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJzYrNAlQnM1NbzM-GVAzGD2mqYR1wAuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

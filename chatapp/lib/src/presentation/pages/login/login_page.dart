@@ -68,7 +68,7 @@ class LoginView extends GetView<LoginController> {
                               // }
                               return null;
                             },
-                            controller: controller.emailEditController,
+                            controller: controller.userNameEditController,
                             style: context.theme.textTheme.bodyMedium?.copyWith(
                                 // color: context.theme.hintColor,
                                 ),

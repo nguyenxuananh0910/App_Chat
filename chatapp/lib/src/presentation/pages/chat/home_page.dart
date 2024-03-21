@@ -170,8 +170,12 @@ class ListGroupView extends GetView<HomeController> {
                             ),
                             Text(
                               user?.users?.userId == item.lastMessage?.senderId
-                                  ? item.lastMessage?.content ?? 'new message'
-                                  : 'bạn: ${item.lastMessage?.content}',
+                                  ? (item.lastMessage?.content == null &&
+                                          item.lastMessage?.content == '')
+                                      ? 'new message'
+                                      : (item.lastMessage?.content ??
+                                          'new message')
+                                  : 'bạn: ${item.lastMessage?.content ?? 'new message'}',
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: false,

@@ -170,14 +170,13 @@ class RoomChatController extends GetxController {
         );
         messageEditController.clear();
         messageEditController.text = '';
-        // messages.add(res);
-        // await hubConnection.invoke("SendMessage", args: [res]);
       }
       messageEditController.text = '';
       messageEditController.clear();
     } catch (e) {
       Get.log('error');
       Get.log(e.toString());
+      messageEditController.clear();
     }
   }
 

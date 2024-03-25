@@ -78,7 +78,7 @@ class CheckLoginController extends GetxController {
     userid.value = prefs.getInt(AuthValueConst.userId) ?? -1;
     // updateStatus(status: true);
     if (isLogin.value == true) {
-      // fetchUsers();
+      fetchUsers();
       getUser(receiverId: userid.value);
     }
   }

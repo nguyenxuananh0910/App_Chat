@@ -32,5 +32,6 @@ class SignalRService {
   Future<void> disconnect() async {
     // await setUserOffline(Get.find<CheckLoginController>().userid.value);
     await connection.stop();
+
   }
 }
